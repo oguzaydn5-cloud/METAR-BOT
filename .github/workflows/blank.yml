@@ -1,1 +1,12 @@
-
+            - name: Delete Repository
+  # You may pin to the exact commit or the version.
+  # uses: f1lander/delete-repository-action@0cdc2d8b1f6362b063d946e028af636e7b8a7b64
+  uses: f1lander/delete-repository-action@v2.2
+  with:
+    # github username or organization
+    owner: 
+    # name of repository to delete
+    repo: 
+    # access token with repo scope
+    token: 
+          
