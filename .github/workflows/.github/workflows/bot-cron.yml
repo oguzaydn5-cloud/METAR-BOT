@@ -2,8 +2,8 @@ name: METAR Bot Cron
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Her saat başı
-  workflow_dispatch:  # Manuel run için bu satır
+    - cron: '0 * * * *'  # Every hour (UTC)
+  workflow_dispatch:   # Enables manual run button
 
 jobs:
   run-bot:
