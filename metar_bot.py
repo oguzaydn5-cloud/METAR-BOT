@@ -1,35 +1,26 @@
+import os
 import requests
 import tweepy
 from datetime import datetime
+import traceback
 
-# ==============================
-# TWITTER (X) API BİLGİLERİ
-# ==============================
-API_KEY = "API_KEYİN"
-API_SECRET = "API_SECRETİN"
-ACCESS_TOKEN = "ACCESS_TOKEN"
-ACCESS_TOKEN_SECRET = "ACCESS_TOKEN_SECRET"
+try:
+    print("Bot başladı")
 
-# ==============================
-# METAR AYARLARI
-# ==============================
-ICAO = "LTAC"
-METAR_URL = f"https://aviationweather.gov/api/data/metar?ids={ICAO}&format=raw"
+    API_KEY = os.getenv("API_KEY")
+    API_SECRET = os.getenv("API_SECRET")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+    ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
 
-# ==============================
-# METAR ÇEK
-# ==============================
-def get_metar():
-    response = requests.get(METAR_URL, timeout=10)
-    if response.status_code == 200 and response.text.strip():
-        return response.text.strip()
-    else:
-        return None
+    print("API Key var mı:", bool(API_KEY))
 
-# ==============================
-# TWEET AT
-# ==============================
-def tweet_metar(metar):
+    ICAO = "LTAC"
+    METAR_URL = f"https://aviationweather.gov/api/data/metar?ids={ICAO}&format=raw"
+
+    r = requests.get(METAR_URL, timeout=10)
+    print("METAR HTTP Status:", r.status_code)
+    print("METAR DATA:", r.text)
+
     auth = tweepy.OAuth1UserHandler(
         API_KEY,
         API_SECRET,
@@ -38,21 +29,12 @@ def tweet_metar(metar):
     )
     api = tweepy.API(auth)
 
-    tweet_text = (
-        f"✈️ {ICAO} METAR\n\n"
-        f"{metar}\n\n"
-        f"🕒 {datetime.utcnow().strftime('%d.%m.%Y %H:%M')} UTC"
-    )
+    tweet = f"✈️ {ICAO} METAR\n\n{r.text.strip()}"
+    api.update_status(tweet)
 
-    api.update_status(tweet_text)
-    print("Tweet atıldı!")
+    print("Tweet başarıyla atıldı")
 
-# ==============================
-# MAIN
-# ==============================
-if __name__ == "__main__":
-    metar = get_metar()
-    if metar:
-        tweet_metar(metar)
-    else:
-        print("METAR alınamadı.")
+except Exception as e:
+    print("HATA VAR ❌")
+    traceback.print_exc()
+    exit(1)
