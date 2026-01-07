@@ -1,9 +1,7 @@
-name: LTAC METAR Bot
+name: LTAC METAR Bot (Manual)
 
 on:
-  schedule:
-    - cron: "*/30 * * * *"   
-  workflow_dispatch:        # Manuel çalıştırma
+  workflow_dispatch:
 
 jobs:
   run-bot:
