@@ -6,6 +6,7 @@ import traceback
 
 ICAO = "LTAC"
 METAR_URL = f"https://aviationweather.gov/api/data/metar?ids={ICAO}&format=raw"
+PREV_METAR_FILE = "prev_metar.txt"
 
 def get_metar():
     r = requests.get(METAR_URL, timeout=10)
@@ -14,6 +15,16 @@ def get_metar():
     else:
         print("METAR alınamadı! Status:", r.status_code)
         return None
+
+def read_prev_metar():
+    if os.path.exists(PREV_METAR_FILE):
+        with open(PREV_METAR_FILE, "r") as f:
+            return f.read().strip()
+    return ""
+
+def save_metar(metar_text):
+    with open(PREV_METAR_FILE, "w") as f:
+        f.write(metar_text)
 
 def tweet_metar(metar_text):
     try:
@@ -40,8 +51,13 @@ def tweet_metar(metar_text):
 if __name__ == "__main__":
     print("Bot başladı")
     metar = get_metar()
-    if metar:
-        print("METAR:", metar)
-        tweet_metar(metar)
-    else:
+    if not metar:
         print("Hata: METAR alınamadı")
+        exit(1)
+
+    prev_metar = read_prev_metar()
+    if metar != prev_metar:
+        tweet_metar(metar)
+        save_metar(metar)
+    else:
+        print("METAR değişmemiş, tweet atılmadı 🛑")
