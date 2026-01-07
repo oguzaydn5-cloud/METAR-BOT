@@ -2,6 +2,8 @@ import os
 import requests
 from tweepy import Client
 from datetime import datetime
+print("Triggered by:", os.getenv("GITHUB_EVENT_NAME"))
+
 import traceback
 
 ICAO = "LTAC"
