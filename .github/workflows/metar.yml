@@ -1,7 +1,10 @@
-name: LTAC METAR Bot (Manual)
+name: LTAC METAR Bot
 
 on:
-  workflow_dispatch:
+  schedule:
+    # Yaklaşık 90 dakikada bir çalıştırır
+    - cron: "0 */1 * * *"
+  workflow_dispatch: # manuel run için
 
 jobs:
   run-bot:
